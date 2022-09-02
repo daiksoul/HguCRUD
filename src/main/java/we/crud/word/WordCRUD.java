@@ -1,7 +1,9 @@
 package we.crud.word;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Scanner;
+import java.util.function.Function;
 
 public class WordCRUD implements ICRUD{
     private ArrayList<Word> list;
@@ -13,7 +15,6 @@ public class WordCRUD implements ICRUD{
         this.s = s;
     }
 
-    @Override
     public Object add() {
         System.out.print("=> 난이도 (1,2,3) : ");
         int lvl = s.nextInt();
@@ -26,6 +27,7 @@ public class WordCRUD implements ICRUD{
         return new Word(wordCounter++,lvl,word,meaning);
     }
 
+    @Override
     public void addWord(){
         Word word = (Word) add();
         list.add(word);
@@ -47,10 +49,25 @@ public class WordCRUD implements ICRUD{
 
     }
 
+    @Override
+    public void list(Function<Word,Boolean> filter, Comparator<Word> comparator) {
+        list.sort(comparator);
+        int c = 1;
+        System.out.println("---------------------------");
+        for (Word word : list)
+            if (filter.apply(word))
+                System.out.println((c++) + " " + word.toString());
+        System.out.println("---------------------------");
+    }
+
     public void listAll(){
-        System.out.println("---------------------------");
-        for(int i = 0; i<list.size(); i++)
-            System.out.println((i+1)+" "+list.get(i).toString());
-        System.out.println("---------------------------");
+        list((word)-> true, Comparator.comparingInt(Word::getId));
+    }
+
+    public void listFilterByLvl(){
+        System.out.print("=> 난이도(1,2,3) : ");
+        int lvl = s.nextInt();
+        s.nextLine();
+        list((word)->word.getLvl()==lvl,Comparator.comparingInt(Word::getId));
     }
 }

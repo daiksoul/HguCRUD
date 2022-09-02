@@ -22,6 +22,9 @@ public class WordManager {
                 case 4:
                     wordCRUD.addWord();
                     break;
+                case 2:
+                    wordCRUD.listFilterByLvl();
+                    break;
             }
         }
     }
