@@ -8,5 +8,5 @@ public interface ICRUD {
     public int update(Object obj);
     public int delete(Object obj);
     public void selectOne(int id);
-    public void list(Function<Word,Boolean> filter, Comparator<Word> comparator);
+    public int list(Function<Word,Boolean> filter, Comparator<Word> comparator);
 }

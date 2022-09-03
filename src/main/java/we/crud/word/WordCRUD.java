@@ -50,7 +50,7 @@ public class WordCRUD implements ICRUD{
     }
 
     @Override
-    public void list(Function<Word,Boolean> filter, Comparator<Word> comparator) {
+    public int list(Function<Word,Boolean> filter, Comparator<Word> comparator) {
         list.sort(comparator);
         int c = 1;
         System.out.println("---------------------------");
@@ -58,6 +58,7 @@ public class WordCRUD implements ICRUD{
             if (filter.apply(word))
                 System.out.println((c++) + " " + word.toString());
         System.out.println("---------------------------");
+        return c;
     }
 
     public void listAll(){
