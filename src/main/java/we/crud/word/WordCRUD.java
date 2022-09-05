@@ -3,8 +3,7 @@ package we.crud.word;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Scanner;
-import java.util.function.Function;
-
+import java.util.function.Predicate;
 public class WordCRUD implements ICRUD{
     private ArrayList<Word> list;
     Scanner s;
@@ -50,25 +49,33 @@ public class WordCRUD implements ICRUD{
     }
 
     @Override
-    public int list(Function<Word,Boolean> filter, Comparator<Word> comparator) {
-        list.sort(comparator);
+    public int list(Predicate<Word> filter, Comparator<Word> comparator) {
         int c = 1;
         System.out.println("---------------------------");
-        for (Word word : list)
-            if (filter.apply(word))
-                System.out.println((c++) + " " + word.toString());
+        for (Word word : list.stream().filter(filter).sorted(comparator).toList())
+            System.out.println((c++) + " " + word.toString());
         System.out.println("---------------------------");
-        return c;
+        return c-1;
     }
 
     public void listAll(){
-        list((word)-> true, Comparator.comparingInt(Word::getId));
+        list((word)-> true, Comparator.comparing(Word::getWord));
     }
 
     public void listFilterByLvl(){
         System.out.print("=> 난이도(1,2,3) : ");
         int lvl = s.nextInt();
         s.nextLine();
-        list((word)->word.getLvl()==lvl,Comparator.comparingInt(Word::getId));
+        list((word)->word.getLvl()==lvl,Comparator.comparing(Word::getWord));
+    }
+
+    public void searchWord(){
+        System.out.print("=> 검색어를 입력하세요 : ");
+        String key = s.next();
+        s.nextLine();
+        int c = list((word)->word.getWord().contains(key),Comparator.comparing(Word::getWord));
+        System.out.println(
+                "총 "+c+"개의 결과가 검색되었습니다.\n" +
+                "---------------------------");
     }
 }

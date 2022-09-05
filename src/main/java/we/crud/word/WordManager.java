@@ -19,6 +19,9 @@ public class WordManager {
                 case 1:
                     wordCRUD.listAll();
                     break;
+                case 3:
+                    wordCRUD.searchWord();
+                    break;
                 case 4:
                     wordCRUD.addWord();
                     break;
