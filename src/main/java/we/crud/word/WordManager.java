@@ -11,6 +11,7 @@ public class WordManager {
     }
 
     public void start(){
+        System.out.println(wordCRUD.loadWord()+"개의 단어를 불러왔습니다!");
         loopmenu: while (true){
             int m = selectMenu();
             switch (m){
@@ -34,6 +35,8 @@ public class WordManager {
                 case 6:
                     wordCRUD.deleteWord();
                     break;
+                case 7:
+                    wordCRUD.saveWord();
             }
         }
         System.out.println("종료합니다.");

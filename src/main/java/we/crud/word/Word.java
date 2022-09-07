@@ -24,4 +24,7 @@ public class Word {
     public String toString(){
         return String.format("%-3s","*".repeat(lvl))+String.format("%15s",word)+" "+meaning;
     }
+    public String toFileString(){
+        return lvl+"|"+word+"|"+meaning;
+    }
 }

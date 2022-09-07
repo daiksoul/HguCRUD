@@ -1,9 +1,7 @@
 package we.crud.word;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 public class WordCRUD implements ICRUD{
@@ -59,6 +57,10 @@ public class WordCRUD implements ICRUD{
     public int list(Predicate<Word> filter, Comparator<Word> comparator) {
         int c = 1;
         filtered = list.stream().filter(filter).sorted(comparator).toList();
+        if(filtered.size()<1){
+            System.out.println("[결과가 없습니다.]");
+            return 0;
+        }
         System.out.println("---------------------------");
         for (Word word : filtered)
             System.out.println((c++) + " " + word.toString());
@@ -94,10 +96,7 @@ public class WordCRUD implements ICRUD{
         System.out.print("=> 삭제할 단어를 검색하세요 : ");
         String key = s.next(); s.nextLine();
         int c = list((word)->word.getWord().contains(key),Comparator.comparing(Word::getWord));
-        if(c<1){
-            System.out.println("단어가 존재하지 않습니다.");
-            return;
-        }
+        if(c<1) return;
         System.out.print("삭제할 단어의 번호를 입력하세요 : ");
         int idx = rightInput(
                 "=>오류] 1에서 "+filtered.size()+"까지의 값을 입력해주세요 : ",
@@ -123,10 +122,7 @@ public class WordCRUD implements ICRUD{
         System.out.print("=> 수정할 단어를 검색하세요 : ");
         String key = s.next(); s.nextLine();
         int c = list((word)->word.getWord().contains(key),Comparator.comparing(Word::getWord));
-        if(c<1){
-            System.out.println("단어가 존재하지 않습니다.");
-            return;
-        }
+        if(c<1) return;
         System.out.print("수정할 단어의 번호를 입력하세요 : ");
         int tidx = rightInput(
                 "=>오류] 1에서 "+filtered.size()+"까지의 값을 입력해주세요 : ",
@@ -138,11 +134,11 @@ public class WordCRUD implements ICRUD{
         Word word = (Word) add();
         word.setId(prevWord.getId());
         System.out.println(
-                "---------------------------\n" +
+                "-".repeat(31)+"\n" +
                 String.format("%15s | %15s\n",prevWord.getWord(),word.getWord())+
-                String.format("%15s | %-3s\n","*".repeat(prevWord.getLvl()),"*".repeat(word.getLvl()))+
+                String.format("%15s | %15s\n","*".repeat(prevWord.getLvl()),"*".repeat(word.getLvl()))+
                 String.format("%15s | %15s\n",prevWord.getMeaning(),word.getMeaning())+
-                "---------------------------"
+                "-".repeat(31)
         );
         System.out.print("정말로 단어를 수정하시겠습니까? (Y/N) : ");
         String answer = rightInput(
@@ -176,5 +172,35 @@ public class WordCRUD implements ICRUD{
             System.out.print(errMsg);
         }
         return val;
+    }
+
+    public void saveWord(){
+        try {
+            Writer w = new FileWriter("word.txt");
+            for(Word word : list.stream().sorted(Comparator.comparing(Word::getId)).toList()){
+                w.write(word.toFileString()+"\n");
+            }
+            System.out.println("파일이 저장되었습니다!");
+            w.close();
+        } catch (IOException e) {
+            System.out.println("파일 저장에 실패하였습니다!");
+        }
+    }
+
+    public int loadWord(){
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("word.txt"));
+            String line;
+            while ((line = br.readLine())!=null){
+                StringTokenizer tokenizer = new StringTokenizer(line,"\\|");
+                int lvl = Integer.parseInt(tokenizer.nextToken());
+                String word = tokenizer.nextToken();
+                String meaning = tokenizer.nextToken();
+                list.add(new Word(wordCounter++,lvl,word,meaning));
+            }
+        } catch (IOException e) {
+            System.out.println("파일 로딩에 실패하였습니다!");
+        }
+        return list.size();
     }
 }
