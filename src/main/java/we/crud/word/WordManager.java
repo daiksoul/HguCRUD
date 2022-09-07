@@ -19,17 +19,24 @@ public class WordManager {
                 case 1:
                     wordCRUD.listAll();
                     break;
+                case 2:
+                    wordCRUD.listFilterByLvl();
+                    break;
                 case 3:
                     wordCRUD.searchWord();
                     break;
                 case 4:
                     wordCRUD.addWord();
                     break;
-                case 2:
-                    wordCRUD.listFilterByLvl();
+                case 5:
+                    wordCRUD.updateWord();
+                    break;
+                case 6:
+                    wordCRUD.deleteWord();
                     break;
             }
         }
+        System.out.println("종료합니다.");
     }
 
     public int selectMenu(){
@@ -46,6 +53,10 @@ public class WordManager {
                     0. 나가기
                 ************************
                 => 원하는 메뉴는?\s""");
-        return s.nextInt();
+        return wordCRUD.rightInput(
+                "=>오류] 0에서 7까지의 값을 입력해주세요 : ",
+                (val) -> val>=0&&val<=7,
+                Integer::parseInt
+        );
     }
 }
