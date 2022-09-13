@@ -154,50 +154,19 @@ public class WordCRUD implements ICRUD{
         }
     }
 
-    public <T> T rightInput(String errMsg, Predicate<T> validator, Function<String,T> parser){
-        String str;
-        T val;
-        while(true){
-            str = s.nextLine().trim();
-            try {
-                val = parser.apply(str);
-            }catch (Exception e){
-                System.out.print(errMsg);
-                continue;
-            }
-            if(validator.test(val))
-                break;
-            System.out.print(errMsg);
-        }
-        return val;
-    }
+
 
     public void saveWord(){
-        try {
-            Writer w = new FileWriter("word.txt");
-            for(Word word : list.stream().sorted(Comparator.comparing(Word::getId)).toList()){
-                w.write(word.toFileString()+"\n");
-            }
-            System.out.println("파일이 저장되었습니다!");
-            w.close();
-        } catch (IOException e) {
-            System.out.println("파일 저장에 실패하였습니다!");
-        }
+        WordJsonHandler.saveFile(list);
     }
 
     public int loadWord(){
-        try {
-            BufferedReader br = new BufferedReader(new FileReader("word.txt"));
-            String line;
-            while ((line = br.readLine())!=null){
-                StringTokenizer tokenizer = new StringTokenizer(line,"\\|");
-                int lvl = Integer.parseInt(tokenizer.nextToken());
-                String word = tokenizer.nextToken();
-                String meaning = tokenizer.nextToken();
-                list.add(new Word(wordCounter++,lvl,word,meaning));
+        List<Word> lst = WordJsonHandler.loadFile();
+        if(lst!=null) {
+            for (Word word : lst) {
+                word.setId(wordCounter++);
+                list.add(word);
             }
-        } catch (IOException e) {
-            System.out.println("파일 로딩에 실패하였습니다!");
         }
         return list.size();
     }

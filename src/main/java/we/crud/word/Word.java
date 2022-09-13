@@ -1,5 +1,6 @@
 package we.crud.word;
 
+import com.google.gson.annotations.Expose;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
@@ -9,8 +10,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Word {
     private int id;
+    @Expose
     private int lvl;
+    @Expose
     private String word;
+    @Expose
     private String meaning;
 
     public Word(int id, int lvl, String word, String meaning) {
