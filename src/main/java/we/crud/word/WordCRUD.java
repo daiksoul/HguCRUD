@@ -1,6 +1,5 @@
 package we.crud.word;
 
-import java.io.*;
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -100,6 +99,7 @@ public class WordCRUD implements ICRUD{
             }
             case "N" -> System.out.println("취소되었습니다.");
         }
+        System.out.println("---------------------------");
     }
 
     @Override
@@ -139,12 +139,14 @@ public class WordCRUD implements ICRUD{
             }
             case "N" -> System.out.println("취소되었습니다.");
         }
+        System.out.println("---------------------------");
     }
 
 
 
     public void saveWord(){
         WordJsonHandler.saveFile(list);
+        System.out.println("---------------------------");
     }
 
     public int loadWord(){
@@ -155,6 +157,7 @@ public class WordCRUD implements ICRUD{
                 list.add(word);
             }
         }
+        System.out.println("---------------------------");
         return list.size();
     }
 }

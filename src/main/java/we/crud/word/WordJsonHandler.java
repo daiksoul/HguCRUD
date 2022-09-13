@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WordJsonHandler {
-    static Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+    static Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
 
     public static JsonArray toJsonArray(List<Word> wordList){
         JsonArray toReturn = new JsonArray();
@@ -34,8 +34,8 @@ public class WordJsonHandler {
 
     public static void saveFile(List<Word> wordList){
         try {
-            JsonWriter writer = new JsonWriter(new FileWriter("word.json"));
-            writer.jsonValue(toJsonArray(wordList).toString());
+            JsonWriter writer = gson.newJsonWriter(new FileWriter("word.json"));
+            writer.jsonValue(gson.toJson(toJsonArray(wordList)));
             writer.close();
             System.out.println("파일을 저장하였습니다!");
         } catch (IOException e) {
@@ -45,7 +45,7 @@ public class WordJsonHandler {
 
     public static List<Word> loadFile(){
         try {
-            JsonReader reader = new JsonReader(new FileReader("word.json"));
+            JsonReader reader = gson.newJsonReader(new FileReader("word.json"));
             JsonArray array = gson.fromJson(reader,JsonArray.class);
             reader.close();
             return fromJson(array);
