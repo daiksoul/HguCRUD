@@ -37,21 +37,6 @@ public class WordCRUD implements ICRUD{
     }
 
     @Override
-    public int update(Object obj) {
-        return 0;
-    }
-
-    @Override
-    public int delete(Object obj) {
-        return 0;
-    }
-
-    @Override
-    public void selectOne(int id) {
-
-    }
-
-    @Override
     public int list(Predicate<Word> filter, Comparator<Word> comparator) {
         int c = 1;
         filtered = list.stream().filter(filter).sorted(comparator).toList();
@@ -90,6 +75,7 @@ public class WordCRUD implements ICRUD{
                 "---------------------------");
     }
 
+    @Override
     public void deleteWord(){
         System.out.print("=> 삭제할 단어를 검색하세요 : ");
         String key = Main.scanner.next(); Main.scanner.nextLine();
@@ -116,6 +102,7 @@ public class WordCRUD implements ICRUD{
         }
     }
 
+    @Override
     public void updateWord(){
         System.out.print("=> 수정할 단어를 검색하세요 : ");
         String key = Main.scanner.next(); Main.scanner.nextLine();
