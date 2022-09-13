@@ -1,13 +1,9 @@
 package we.crud.word;
-
-import java.util.Scanner;
-
 public class WordManager {
-    static Scanner s = new Scanner(System.in);
     private final WordCRUD wordCRUD;
 
     public WordManager(){
-        wordCRUD = new WordCRUD(s);
+        wordCRUD = new WordCRUD();
     }
 
     public void start(){
@@ -56,7 +52,7 @@ public class WordManager {
                     0. 나가기
                 ************************
                 => 원하는 메뉴는?\s""");
-        return wordCRUD.rightInput(
+        return Util.rightInput(
                 "=>오류] 0에서 7까지의 값을 입력해주세요 : ",
                 (val) -> val>=0&&val<=7,
                 Integer::parseInt

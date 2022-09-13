@@ -2,30 +2,28 @@ package we.crud.word;
 
 import java.io.*;
 import java.util.*;
-import java.util.function.Function;
 import java.util.function.Predicate;
+
 public class WordCRUD implements ICRUD{
     private ArrayList<Word> list;
-    Scanner s;
     private int wordCounter = 0;
     private List<Word> filtered;
 
-    public WordCRUD(Scanner s){
+    public WordCRUD(){
         list = new ArrayList<>();
-        this.s = s;
     }
 
     public Object add() {
         System.out.print("=> 새 난이도 (1,2,3) 입력 : ");
-        int lvl = rightInput(
+        int lvl = Util.rightInput(
                 "=>오류] 1에서 3까지의 값을 입력해주세요 : ",
                 (val) -> val>=1&&val<=3,
                 Integer::parseInt
         );
         System.out.print("=> 새 단어 입력 : ");
-        String word = s.nextLine();
+        String word = Main.scanner.nextLine();
         System.out.print("=> 뜻 입력 : ");
-        String meaning = s.nextLine();
+        String meaning = Main.scanner.nextLine();
 
         return new Word(0,lvl,word,meaning);
     }
@@ -57,14 +55,14 @@ public class WordCRUD implements ICRUD{
     public int list(Predicate<Word> filter, Comparator<Word> comparator) {
         int c = 1;
         filtered = list.stream().filter(filter).sorted(comparator).toList();
-        if(filtered.size()<1){
+        if(filtered.size()<1)
             System.out.println("[결과가 없습니다.]");
-            return 0;
+        else {
+            System.out.println("---------------------------");
+            for (Word word : filtered)
+                System.out.println((c++) + " " + word.toString());
+            System.out.println("---------------------------");
         }
-        System.out.println("---------------------------");
-        for (Word word : filtered)
-            System.out.println((c++) + " " + word.toString());
-        System.out.println("---------------------------");
         return filtered.size();
     }
 
@@ -74,7 +72,7 @@ public class WordCRUD implements ICRUD{
 
     public void listFilterByLvl(){
         System.out.print("=> 난이도(1,2,3) : ");
-        int lvl = rightInput(
+        int lvl = Util.rightInput(
                 "=>오류] 1에서 3까지의 값을 입력해주세요 : ",
                 (val) -> val>=1&&val<=3,
                 Integer::parseInt
@@ -84,8 +82,8 @@ public class WordCRUD implements ICRUD{
 
     public void searchWord(){
         System.out.print("=> 검색어를 입력하세요 : ");
-        String key = s.next();
-        s.nextLine();
+        String key = Main.scanner.next();
+        Main.scanner.nextLine();
         int c = list((word)->word.getWord().contains(key),Comparator.comparing(Word::getWord));
         System.out.println(
                 "총 "+c+"개의 결과가 검색되었습니다.\n" +
@@ -94,17 +92,17 @@ public class WordCRUD implements ICRUD{
 
     public void deleteWord(){
         System.out.print("=> 삭제할 단어를 검색하세요 : ");
-        String key = s.next(); s.nextLine();
+        String key = Main.scanner.next(); Main.scanner.nextLine();
         int c = list((word)->word.getWord().contains(key),Comparator.comparing(Word::getWord));
         if(c<1) return;
         System.out.print("삭제할 단어의 번호를 입력하세요 : ");
-        int idx = rightInput(
+        int idx = Util.rightInput(
                 "=>오류] 1에서 "+filtered.size()+"까지의 값을 입력해주세요 : ",
                 (val)-> val >=1&& val<=filtered.size(),
                 Integer::parseInt
         );
         System.out.print("정말로 단어 "+filtered.get(idx-1).getWord()+"를 삭제하시겠습니까? (Y/N) : ");
-        String answer = rightInput(
+        String answer = Util.rightInput(
                 "=>오류] Y또는 N을 입력해주세요 : ",
                 (val)-> val.equalsIgnoreCase("Y") || val.equalsIgnoreCase("N"),
                 (x)->x
@@ -120,11 +118,11 @@ public class WordCRUD implements ICRUD{
 
     public void updateWord(){
         System.out.print("=> 수정할 단어를 검색하세요 : ");
-        String key = s.next(); s.nextLine();
+        String key = Main.scanner.next(); Main.scanner.nextLine();
         int c = list((word)->word.getWord().contains(key),Comparator.comparing(Word::getWord));
         if(c<1) return;
         System.out.print("수정할 단어의 번호를 입력하세요 : ");
-        int tidx = rightInput(
+        int tidx = Util.rightInput(
                 "=>오류] 1에서 "+filtered.size()+"까지의 값을 입력해주세요 : ",
                 (val)-> val >=1&& val<=filtered.size(),
                 Integer::parseInt
@@ -141,7 +139,7 @@ public class WordCRUD implements ICRUD{
                 "-".repeat(31)
         );
         System.out.print("정말로 단어를 수정하시겠습니까? (Y/N) : ");
-        String answer = rightInput(
+        String answer = Util.rightInput(
                 "=>오류] Y또는 N을 입력해주세요 : ",
                 (val)-> val.equalsIgnoreCase("Y") || val.equalsIgnoreCase("N"),
                 (x)->x
